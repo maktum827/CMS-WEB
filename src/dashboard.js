@@ -21,14 +21,16 @@ import PersonAdd from '@mui/icons-material/PersonAdd';
 import Settings from '@mui/icons-material/Settings';
 import Logout from '@mui/icons-material/Logout';
 // import Recipt from './accounts/recipt';
-import SideItem from './listitem/SideItem';
+import SideItem from './components/listitem/SideItem';
 import Recipt from './components/accounts/recipt';
 import TranslateIcon from '@mui/icons-material/Translate';
 import SmlCustomBtn from './components/custom/widget';
 import profileImage from './assets/images/profile.jpg';
 import { Fab } from '@mui/material';
 import { Headphones } from '@mui/icons-material';
-
+import MlaTable from './components/accounts/mla';
+import i18n from './i18n';
+// import { useTranslation } from 'react-i18next';
 
 const drawerWidth = 240;
 const Main = styled('main', { shouldForwardProp: (prop) => prop !== 'open' })(
@@ -67,8 +69,18 @@ export default function Dashboard() {
     const [open, setOpen] = useState(true);
     const [menudata, setMenudata] = useState('');
 
+    // for language change handling 
+    const changeLanguage = (lng) => {
+        i18n.changeLanguage(lng);
+        localStorage.setItem('language', lng); // Store the selected language
+    };
+
     const handleRecipt = () => {
         setMenudata('acntrecipt');
+    };
+
+    const handleMla = () => {
+        setMenudata('mlatable');
     };
 
     const handleDrawerOpen = () => {
@@ -146,9 +158,9 @@ export default function Dashboard() {
                                 }}
                                 sx={{ mt: 1 }}
                             >
-                                <MenuItem>English (UK)</MenuItem>
-                                <MenuItem>বাংলা (Bengali)</MenuItem>
-                                <MenuItem>العربية (Arabic)</MenuItem>
+                                <MenuItem onClick={() => changeLanguage('en')}>English (UK)</MenuItem>
+                                <MenuItem onClick={() => changeLanguage('bn')}>বাংলা (Bengali)</MenuItem>
+                                <MenuItem onClick={() => changeLanguage('ar')}>العربية (Arabic)</MenuItem>
                             </Menu>
 
                             <Tooltip title="Profile settings">
@@ -260,12 +272,12 @@ export default function Dashboard() {
                             </CloseIcon>
                         </IconButton>
                     </DrawerHeader>
-                    <SideItem handleRecipt={handleRecipt} />
+                    <SideItem handleRecipt={handleRecipt} handleMla={handleMla} />
                     <Divider />
 
-                    <Fab variant="extended" sx={{ margin: 2, background: 'white', color: '#00008B' }}>
-                        <Headphones fontSize='large' sx={{ mr: 1 }} />
-                        Need any help ?
+                    <Fab variant="extended" sx={{ mx: 3, position: 'fixed', bottom: 10, background: 'white', color: '#00008B' }}>
+                        <Headphones fontSize='large' sx={{ mx: 1 }} />
+                        Need help ?
                     </Fab>
                 </Drawer>
             </div>
@@ -273,6 +285,7 @@ export default function Dashboard() {
                 <DrawerHeader />
                 <div>
                     {menudata === 'acntrecipt' && <Recipt />}
+                    {menudata === 'mlatable' && <MlaTable />}
                 </div>
             </Main>
         </Box >

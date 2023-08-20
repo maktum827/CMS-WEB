@@ -32,76 +32,8 @@ import 'jspdf-autotable';
 import ReciptForm from './form';
 import EditIcon from '@mui/icons-material/Edit';
 import { Print, ViewWeekRounded } from '@mui/icons-material';
+import { ReciptheadCells, ReciptData } from '../store/data';
 
-const headCells = [
-    {
-        id: 'name',
-        numeric: false,
-        disablePadding: true,
-        label: 'Doner name',
-        visible: 'true'
-    },
-    {
-        id: 'address',
-        numeric: false,
-        disablePadding: false,
-        label: 'Adress',
-        visible: 'true'
-    },
-    {
-        id: 'book_no',
-        numeric: true,
-        disablePadding: false,
-        label: 'Book no',
-        visible: 'true'
-    },
-    {
-        id: 'fund',
-        numeric: false,
-        disablePadding: false,
-        label: 'Fund',
-        visible: 'true'
-    },
-    {
-        id: 'about',
-        numeric: false,
-        disablePadding: false,
-        label: 'About',
-        visible: 'true'
-    },
-    {
-        id: 'amount',
-        numeric: true,
-        disablePadding: false,
-        label: 'Amount',
-        visible: 'true'
-    },
-    {
-        id: 'date',
-        numeric: false,
-        disablePadding: false,
-        label: 'Date',
-        visible: 'true'
-    },
-];
-function createData(name, address, book_no, fund, about, amount, date) {
-    return { name, address, book_no, fund, about, amount, date };
-}
-
-const rows = [
-    createData('Cupcake', 'mymensingh, katlashen', 100, 'lillah fund', 'selary', 200, '00.00.2023'),
-    createData('Donut', 'mymensingh, katlashen', 100, 'lillah fund', 'selary', 200, '00.00.2023'),
-    createData('Eclair', 'mymensingh, katlashen', 3000, 'lillah', 'selary selary', 3000, '00.00.202255'),
-    createData('Frozen yoghurt', 'mymensingh, katlashen', 100, 'lillah fund', 'selary', 200, '00.00.2023'),
-    createData('Gingerbread', 'mymensingh', 100, 'lillah fund', 'selary', 200, '00.00.2023'),
-    createData('Honeycomb', 'mymensingh,', 100, 'lillah fund', 'selary', 200, '00.00.2023'),
-    createData('Ice cream sandwich', 'mymensingh, katlashen', 100, 'lillah fund', 'selary', 200, '00.00.2022'),
-    createData('Jelly Bean', 'mymensingh, katl', 1, 'lillah fund', 'selary', 200, '00.00.2023'),
-    createData('KitKat', 'mymensingh, katlashen', 100, 'lillah', 'selary', 200, '00.00.2023'),
-    createData('Lollipop', 'mymensingh, katlashen', 22, 'lillah fund', 'selary', 200, '00.00.2023'),
-    createData('Nougat', 'mymensingh, katlashen', 100, 'lillah fund', 'selary', 200, '00.00.2021'),
-    createData('Oreo', 'mymensingh, katlashen', 100, 'lillah fund', 'selary', 200, '00.00.2021'),
-];
 
 function descendingComparator(a, b, orderBy) {
     if (b[orderBy] < a[orderBy]) {
@@ -151,7 +83,7 @@ function EnhancedTableHead(props) {
                         }}
                     />
                 </TableCell>
-                {headCells.map((headCell) => {
+                {ReciptheadCells.map((headCell) => {
                     if (visibleColumns.includes(headCell.id)) {
                         return (
                             <TableCell
@@ -217,7 +149,7 @@ function EnhancedTableToolbar(props) {
     };
 
     const handleExportCSV = () => {
-        const csvData = Papa.unparse(rows); // 'rows' should contain your data array
+        const csvData = Papa.unparse(ReciptData); // 'ReciptData' should contain your data array
         const blob = new Blob([csvData], { type: 'text/csv' });
         const url = URL.createObjectURL(blob);
         const link = document.createElement('a');
@@ -249,8 +181,8 @@ function EnhancedTableToolbar(props) {
         };
 
         doc.autoTable({
-            head: [headCells.map(headCell => headCell.label)],
-            body: rows.map(row => Object.values(row)),
+            head: [ReciptheadCells.map(headCell => headCell.label)],
+            body: ReciptData.map(row => Object.values(row)),
             ...tableOptions,
         });
 
@@ -399,7 +331,7 @@ function EnhancedTableToolbar(props) {
                         open={open1}
                         onClose={handleClose}
                     >
-                        {headCells.map((headCell) => (
+                        {ReciptheadCells.map((headCell) => (
                             <MenuItem key={headCell.id} onClick={handleClose}>
                                 <FormControlLabel
                                     control={
@@ -440,10 +372,10 @@ export default function Recipt() {
     const [selected, setSelected] = useState([]);
     const [page, setPage] = useState(0);
     const [dense, setDense] = useState(false);
-    const [rowsPerPage, setRowsPerPage] = useState(5);
+    const [ReciptDataPerPage, setReciptDataPerPage] = useState(5);
     const [searchTerm, setSearchTerm] = useState('');
     const [visibleColumns, setVisibleColumns] = useState(
-        headCells.map((headCell) => headCell.id)
+        ReciptheadCells.map((headCell) => headCell.id)
     );
 
     // Define the handleColumnToggle function
@@ -463,7 +395,7 @@ export default function Recipt() {
 
     const handleSelectAllClick = (event) => {
         if (event.target.checked) {
-            const newSelected = rows.map((n) => n.name);
+            const newSelected = ReciptData.map((n) => n.name);
             setSelected(newSelected);
             return;
         }
@@ -494,8 +426,8 @@ export default function Recipt() {
         setPage(newPage);
     };
 
-    const handleChangeRowsPerPage = (event) => {
-        setRowsPerPage(parseInt(event.target.value, 10));
+    const handleChangeReciptDataPerPage = (event) => {
+        setReciptDataPerPage(parseInt(event.target.value, 10));
         setPage(0);
     };
 
@@ -505,21 +437,21 @@ export default function Recipt() {
 
     const isSelected = (name) => selected.indexOf(name) !== -1;
 
-    // Avoid a layout jump when reaching the last page with empty rows.
-    const emptyRows =
-        page > 0 ? Math.max(0, (1 + page) * rowsPerPage - rows.length) : 0;
+    // Avoid a layout jump when reaching the last page with empty ReciptData.
+    const emptyReciptData =
+        page > 0 ? Math.max(0, (1 + page) * ReciptDataPerPage - ReciptData.length) : 0;
 
-    const visibleRows = useMemo(
+    const visibleReciptData = useMemo(
         () =>
-            stableSort(rows, getComparator(order, orderBy)).filter((row) =>
+            stableSort(ReciptData, getComparator(order, orderBy)).filter((row) =>
                 Object.values(row).some((value) =>
                     value.toString().toLowerCase().includes(searchTerm.toLowerCase())
                 )
             ).slice(
-                page * rowsPerPage,
-                page * rowsPerPage + rowsPerPage,
+                page * ReciptDataPerPage,
+                page * ReciptDataPerPage + ReciptDataPerPage,
             ),
-        [order, orderBy, page, rowsPerPage, searchTerm]
+        [order, orderBy, page, ReciptDataPerPage, searchTerm]
     );
 
     const handleEdit = (row) => {
@@ -551,11 +483,11 @@ export default function Recipt() {
                             orderBy={orderBy}
                             onSelectAllClick={handleSelectAllClick}
                             onRequestSort={handleRequestSort}
-                            rowCount={rows.length}
+                            rowCount={ReciptData.length}
                             visibleColumns={visibleColumns}
                         />
                         <TableBody>
-                            {visibleRows.map((row, index) => {
+                            {visibleReciptData.map((row, index) => {
                                 const isItemSelected = isSelected(row.name);
                                 const labelId = `enhanced-table-checkbox-${index}`;
 
@@ -577,7 +509,7 @@ export default function Recipt() {
                                             />
                                         </TableCell>
 
-                                        {headCells.map((headCell) => {
+                                        {ReciptheadCells.map((headCell) => {
                                             if (visibleColumns.includes(headCell.id)) {
                                                 return (
                                                     <TableCell
@@ -603,10 +535,10 @@ export default function Recipt() {
                                     </TableRow>
                                 );
                             })}
-                            {emptyRows > 0 && (
+                            {emptyReciptData > 0 && (
                                 <TableRow
                                     style={{
-                                        height: (dense ? 33 : 53) * emptyRows,
+                                        height: (dense ? 33 : 53) * emptyReciptData,
                                     }}
                                 >
                                     <TableCell colSpan={6} />
@@ -615,14 +547,15 @@ export default function Recipt() {
                         </TableBody>
                     </Table>
                 </TableContainer>
+
                 <TablePagination
                     rowsPerPageOptions={[5, 10, 15, 25, 50, 100, 200]}
                     component="div"
-                    count={rows.length}
-                    rowsPerPage={rowsPerPage}
+                    count={ReciptData.length}
+                    rowsPerPage={ReciptDataPerPage}
                     page={page}
                     onPageChange={handleChangePage}
-                    onRowsPerPageChange={handleChangeRowsPerPage}
+                    onRowsPerPageChange={handleChangeReciptDataPerPage}
                 />
             </Paper>
         </Box >

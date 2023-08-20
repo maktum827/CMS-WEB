@@ -16,10 +16,11 @@ const themecss = createTheme({
                 root: {
                     '&:hover': {
                         backgroundColor: '#ede7f6',
-                        borderRadius: '5px',
+                        // borderRadius: '5px',
                     },
-                    marginLeft: '10px',
-                    marginRight: '10px',
+                    // marginLeft: '5px',
+                    paddingTop: '5px',
+                    paddingBottom: '5px',
                 },
 
             },
